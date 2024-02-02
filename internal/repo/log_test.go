@@ -9,8 +9,8 @@ import (
 )
 
 func TestLog(t *testing.T) {
-	lgs, err := repo.Log(path.Join("fixtures", "basic"), "HEAD", 20)
+	lgs, err := repo.Log(path.Join("fixtures", "repos", "basic_bare"), "HEAD", 20)
 
 	assert.NoError(t, err)
-	assert.Len(t, lgs, 2)
+	assert.Len(t, lgs, 4)
 }
