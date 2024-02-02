@@ -1,36 +1,38 @@
 package repo
 
 import (
-	"time"
+	"fmt"
+	"strings"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 )
 
 type LogStatement struct {
-	Message string
-	Author  string
-	Date    time.Time
+	CommitHash string
+	Message    string
+	Author     string
+	Date       string
 }
 
-func Log(p string, commit string, nCommits uint8) ([]LogStatement, error) {
-	repo, err := git.PlainOpen(p)
+func Log(path string, commitHash string, size uint8) ([]LogStatement, error) {
+	repo, err := git.PlainOpen(path)
 
 	if err != nil {
 		return nil, err
 	}
 
-	lgs := make([]LogStatement, 0, nCommits)
+	lgs := make([]LogStatement, 0, size)
 
 	cIter, err := repo.Log(&git.LogOptions{
-		From: plumbing.NewHash(commit),
+		From: plumbing.NewHash(commitHash),
 	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	for i := uint8(0); i < nCommits; i++ {
+	for i := uint8(0); i < size; i++ {
 		commit, err := cIter.Next()
 
 		if err != nil {
@@ -38,9 +40,10 @@ func Log(p string, commit string, nCommits uint8) ([]LogStatement, error) {
 		}
 
 		lgs = append(lgs, LogStatement{
-			Message: commit.Message,
-			Author:  commit.Author.Name,
-			Date:    commit.Author.When,
+			Message:    strings.TrimSpace(commit.Message),
+			Author:     fmt.Sprintf("%s <%s>", commit.Author.Name, commit.Author.Email),
+			Date:       commit.Author.When.UTC().Format("Mon Jan 2 15:04:05 2006"),
+			CommitHash: commit.Hash.String(),
 		})
 	}
 
