@@ -1,0 +1,8 @@
+{
+  "packages": ["go@1.21.5", "golangci-lint@1.55.2"],
+  "shell": {
+    "scripts": {
+      "test": "go test ./..."
+    }
+  }
+}
