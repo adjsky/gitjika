@@ -3,6 +3,7 @@ package repo
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -13,7 +14,7 @@ type LogStatement struct {
 	CommitHash   string
 	Message      string
 	Author       string
-	Date         string
+	Date         time.Time
 	LinesDeleted int
 	LinesAdded   int
 	References   []string
@@ -62,7 +63,7 @@ func (repo Repo) Log(commitHash string, size uint8) ([]LogStatement, error) {
 		lgs = append(lgs, LogStatement{
 			Message:      strings.TrimSpace(commit.Message),
 			Author:       fmt.Sprintf("%s <%s>", commit.Author.Name, commit.Author.Email),
-			Date:         commit.Author.When.UTC().Format("Mon Jan 2 15:04:05 2006"),
+			Date:         commit.Author.When,
 			CommitHash:   commit.Hash.String(),
 			LinesDeleted: totalCommitStats.LinesDeleted,
 			LinesAdded:   totalCommitStats.LinesAdded,
