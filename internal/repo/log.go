@@ -29,13 +29,17 @@ func (repo Repo) Log(commitHash string, size uint8) ([]LogStatement, error) {
 
 	refm := make(map[plumbing.Hash][]string)
 
-	rIter.ForEach(func(ref *plumbing.Reference) error {
+	err = rIter.ForEach(func(ref *plumbing.Reference) error {
 		hash := ref.Hash()
 
 		refm[hash] = append(refm[hash], ref.Name().Short())
 
 		return nil
 	})
+
+	if err != nil {
+		return nil, err
+	}
 
 	lgs := make([]LogStatement, 0, size)
 
