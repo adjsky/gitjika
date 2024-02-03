@@ -2,5 +2,3 @@
 	repositoryformatversion = 0
 	filemode = true
 	bare = true
-[remote "origin"]
-	url = /home/adjsky/Programming/pers/gitjika/internal/repo/fixtures/repo1_basic

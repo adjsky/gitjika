@@ -4,3 +4,4 @@ linters:
     - depguard
     - dupword
     - gofumpt
+    - funlen
