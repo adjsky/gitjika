@@ -10,11 +10,11 @@ import (
 )
 
 func TestRefs(t *testing.T) {
-	basicBareRepo, err := repo.New(path.Join("fixtures", "repos", "refs_bare"))
+	refsBareRepo, err := repo.New(path.Join("fixtures", "repos", "refs_bare"))
 
 	assert.NilError(t, err)
 
-	refs, err := basicBareRepo.Refs()
+	refs, err := refsBareRepo.Refs()
 
 	assert.NilError(t, err)
 
