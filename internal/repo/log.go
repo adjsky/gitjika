@@ -1,7 +1,9 @@
 package repo
 
 import (
+	"errors"
 	"fmt"
+	"io"
 	"strings"
 	"time"
 
@@ -11,7 +13,7 @@ import (
 )
 
 type LogStatement struct {
-	CommitHash   string
+	CommitID     string
 	Message      string
 	Author       string
 	Date         time.Time
@@ -20,7 +22,7 @@ type LogStatement struct {
 	References   []string
 }
 
-func (repo Repo) Log(commitHash string, size uint8) ([]LogStatement, error) {
+func (repo Repo) Log(commitID string, size uint8) ([]LogStatement, error) {
 	rIter, err := repo.raw.References()
 
 	if err != nil {
@@ -44,7 +46,7 @@ func (repo Repo) Log(commitHash string, size uint8) ([]LogStatement, error) {
 	lgs := make([]LogStatement, 0, size)
 
 	cIter, err := repo.raw.Log(&git.LogOptions{
-		From: plumbing.NewHash(commitHash),
+		From: plumbing.NewHash(commitID),
 	})
 
 	if err != nil {
@@ -55,6 +57,10 @@ func (repo Repo) Log(commitHash string, size uint8) ([]LogStatement, error) {
 		commit, err := cIter.Next()
 
 		if err != nil {
+			if !errors.Is(err, io.EOF) {
+				return nil, err
+			}
+
 			break
 		}
 
@@ -68,7 +74,7 @@ func (repo Repo) Log(commitHash string, size uint8) ([]LogStatement, error) {
 			Message:      strings.TrimSpace(commit.Message),
 			Author:       fmt.Sprintf("%s <%s>", commit.Author.Name, commit.Author.Email),
 			Date:         commit.Author.When,
-			CommitHash:   commit.Hash.String(),
+			CommitID:     commit.Hash.String(),
 			LinesDeleted: totalCommitStats.LinesDeleted,
 			LinesAdded:   totalCommitStats.LinesAdded,
 			References:   refm[commit.Hash],
