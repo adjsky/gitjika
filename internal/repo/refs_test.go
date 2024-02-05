@@ -23,19 +23,19 @@ func TestRefs(t *testing.T) {
 			Name:      "code",
 			Message:   "add code",
 			Author:    "adjsky <igorlfmartins@mail.ru>",
-			UpdatedAt: time.Date(2024, time.February, 4, 21, 31, 15, 0, time.FixedZone("UTC+0300", 3*60*60)),
+			UpdatedAt: time.Date(2024, time.February, 4, 18, 31, 15, 0, time.UTC),
 		},
 		{
 			Name:      "readme",
 			Message:   "update readme",
 			Author:    "adjsky <igorlfmartins@mail.ru>",
-			UpdatedAt: time.Date(2024, time.February, 4, 21, 26, 27, 0, time.FixedZone("UTC+0300", 3*60*60)),
+			UpdatedAt: time.Date(2024, time.February, 4, 18, 26, 27, 0, time.UTC),
 		},
 		{
 			Name:      "master",
 			Message:   "init",
 			Author:    "adjsky <igorlfmartins@mail.ru>",
-			UpdatedAt: time.Date(2024, time.February, 4, 21, 25, 49, 0, time.FixedZone("UTC+0300", 3*60*60)),
+			UpdatedAt: time.Date(2024, time.February, 4, 18, 25, 49, 0, time.UTC),
 		},
 	})
 
@@ -44,7 +44,7 @@ func TestRefs(t *testing.T) {
 			Name:      "v1.0",
 			Message:   "version 1.0",
 			Author:    "adjsky <igorlfmartins@mail.ru>",
-			CreatedAt: time.Date(2024, time.February, 4, 21, 29, 25, 0, time.FixedZone("UTC+0300", 3*60*60)),
+			CreatedAt: time.Date(2024, time.February, 4, 18, 29, 25, 0, time.UTC),
 		},
 	})
 }

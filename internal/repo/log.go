@@ -73,7 +73,7 @@ func (repo Repo) Log(commitID string, size uint8) ([]LogStatement, error) {
 		lgs = append(lgs, LogStatement{
 			Message:      strings.TrimSpace(commit.Message),
 			Author:       fmt.Sprintf("%s <%s>", commit.Author.Name, commit.Author.Email),
-			Date:         commit.Author.When,
+			Date:         commit.Author.When.UTC(),
 			CommitID:     commit.Hash.String(),
 			LinesDeleted: totalCommitStats.LinesDeleted,
 			LinesAdded:   totalCommitStats.LinesAdded,

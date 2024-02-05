@@ -3,16 +3,54 @@ package repo_test
 import (
 	"path"
 	"testing"
+	"time"
 
 	"github.com/adjsky/gitjika/internal/repo"
 	"gotest.tools/v3/assert"
 )
 
 func TestNew(t *testing.T) {
-	basicBareRepo, err := repo.New(path.Join("fixtures", "repos", "basic_bare"))
+	type expectedData struct {
+		name        string
+		description string
+		author      string
+		age         time.Time
+	}
 
-	assert.NilError(t, err)
-	assert.Equal(t, basicBareRepo.Name, "basic_bare")
-	assert.Equal(t, basicBareRepo.Description, "Basic test repository.")
-	assert.Equal(t, basicBareRepo.Author, "adjsky")
+	tests := []struct {
+		repo     string
+		expected expectedData
+	}{
+		{repo: "basic_bare", expected: expectedData{
+			name:        "basic_bare",
+			description: "Basic test repository.",
+			author:      "adjsky",
+			age:         time.Time{},
+		}},
+		{repo: "empty_bare", expected: expectedData{
+			name:        "empty_bare",
+			description: "Unnamed repository; edit this file 'description' to name the repository.",
+			author:      "",
+			age:         time.Time{},
+		}},
+		{repo: "agefile_bare", expected: expectedData{
+			name:        "agefile_bare",
+			description: "Unnamed repository; edit this file 'description' to name the repository.",
+			author:      "",
+			age:         time.Date(2024, time.February, 5, 20, 52, 26, 0, time.UTC),
+		}},
+	}
+
+	for _, test := range tests {
+		t.Run(test.repo, func(t *testing.T) {
+			testRepo, err := repo.New(path.Join("fixtures", "repos", test.repo))
+
+			assert.NilError(t, err)
+
+			assert.Equal(t, testRepo.Name(), test.expected.name)
+			assert.Equal(t, testRepo.Description(), test.expected.description)
+			assert.Equal(t, testRepo.Author(), test.expected.author)
+			assert.Equal(t, testRepo.Age(), test.expected.age)
+		})
+	}
 }

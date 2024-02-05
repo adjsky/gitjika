@@ -5,16 +5,16 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/config"
 )
 
 type Repo struct {
-	Name        string
-	Description string
-	Author      string
-
-	raw *git.Repository
+	path   string
+	raw    *git.Repository
+	config *config.Config
 }
 
 func New(path string) (Repo, error) {
@@ -24,12 +24,6 @@ func New(path string) (Repo, error) {
 		return Repo{}, fmt.Errorf("failed to open repository: %w", err)
 	}
 
-	description, err := os.ReadFile(fmt.Sprintf("%s/description", path))
-
-	if err != nil {
-		return Repo{}, fmt.Errorf("failed to read repository description: %w", err)
-	}
-
 	config, err := repo.Config()
 
 	if err != nil {
@@ -37,9 +31,38 @@ func New(path string) (Repo, error) {
 	}
 
 	return Repo{
-		Name:        filepath.Base(path),
-		Description: strings.TrimSpace(string(description)),
-		Author:      config.Raw.Section("gitjika").Option("author"),
-		raw:         repo,
+		path:   path,
+		config: config,
+		raw:    repo,
 	}, nil
+}
+
+func (repo Repo) Name() string {
+	return filepath.Base(repo.path)
+}
+
+func (repo Repo) Description() string {
+	description, err := os.ReadFile(fmt.Sprintf("%s/description", repo.path))
+
+	if err != nil {
+		return ""
+	}
+
+	return strings.TrimSpace(string(description))
+}
+
+func (repo Repo) Author() string {
+	return repo.config.Raw.Section("gitjika").Option("author")
+}
+
+func (repo Repo) Age() time.Time {
+	agefile, err := os.ReadFile(fmt.Sprintf("%s/last-modified", repo.path))
+
+	if err != nil {
+		return time.Time{}
+	}
+
+	age, _ := time.Parse("2006-01-02 15:04:05 -0700", strings.TrimSpace(string(agefile)))
+
+	return age.UTC()
 }

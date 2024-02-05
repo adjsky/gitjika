@@ -50,7 +50,7 @@ func (repo Repo) Refs() (RefsResult, error) {
 				Name:      ref.Name().Short(),
 				Message:   strings.TrimSpace(tagObject.Message),
 				Author:    fmt.Sprintf("%s <%s>", tagObject.Tagger.Name, tagObject.Tagger.Email),
-				CreatedAt: tagObject.Tagger.When,
+				CreatedAt: tagObject.Tagger.When.UTC(),
 			})
 
 		case ref.Name().IsBranch():
@@ -64,7 +64,7 @@ func (repo Repo) Refs() (RefsResult, error) {
 				Name:      ref.Name().Short(),
 				Message:   strings.TrimSpace(commit.Message),
 				Author:    fmt.Sprintf("%s <%s>", commit.Author.Name, commit.Author.Email),
-				UpdatedAt: commit.Author.When,
+				UpdatedAt: commit.Author.When.UTC(),
 			})
 		}
 

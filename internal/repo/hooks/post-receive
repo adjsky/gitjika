@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# https://github.com/zx2c4/cgit/blob/master/contrib/hooks/post-receive.agefile
+
+agefile="$(git rev-parse --git-dir)"/last-modified
+
+git for-each-ref \
+    --sort=-authordate --count=1 \
+    --format='%(authordate:iso8601)' \
+    >"$agefile"
