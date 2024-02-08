@@ -1,12 +1,18 @@
 package repo
 
 import (
+	"errors"
 	"fmt"
 	"slices"
 	"strings"
 	"time"
 
 	"github.com/go-git/go-git/v5/plumbing"
+)
+
+var (
+	ErrAnnotatedTagNotFound = errors.New("annotated tag not found")
+	ErrCommitNotFound       = errors.New("commit not found")
 )
 
 type Branch struct {
@@ -34,7 +40,7 @@ func (repo Repo) Refs() (RefsResult, error) {
 	rIter, err := repo.raw.References()
 
 	if err != nil {
-		return result, err
+		return result, ErrFailedToReadRefs
 	}
 
 	err = rIter.ForEach(func(ref *plumbing.Reference) error {
@@ -43,7 +49,7 @@ func (repo Repo) Refs() (RefsResult, error) {
 			tagObject, err := repo.raw.TagObject(ref.Hash())
 
 			if err != nil {
-				return err
+				return ErrAnnotatedTagNotFound
 			}
 
 			result.Tags = append(result.Tags, Tag{
@@ -57,7 +63,7 @@ func (repo Repo) Refs() (RefsResult, error) {
 			commit, err := repo.raw.CommitObject(ref.Hash())
 
 			if err != nil {
-				return err
+				return ErrCommitNotFound
 			}
 
 			result.Branches = append(result.Branches, Branch{

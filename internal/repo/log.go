@@ -12,6 +12,11 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/object"
 )
 
+var (
+	ErrRefNotFound            = errors.New("reference not found")
+	ErrFailedToCalculateStats = errors.New("failed to compute stats")
+)
+
 type LogStatement struct {
 	CommitID     string
 	Message      string
@@ -26,7 +31,7 @@ func (repo Repo) Log(commitID string, size uint8) ([]LogStatement, error) {
 	rIter, err := repo.raw.References()
 
 	if err != nil {
-		return nil, err
+		return nil, ErrFailedToReadRefs
 	}
 
 	refm := make(map[plumbing.Hash][]string)
@@ -50,7 +55,7 @@ func (repo Repo) Log(commitID string, size uint8) ([]LogStatement, error) {
 	})
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get log iterator: %w", err)
 	}
 
 	for i := uint8(0); i < size; i++ {
@@ -58,7 +63,7 @@ func (repo Repo) Log(commitID string, size uint8) ([]LogStatement, error) {
 
 		if err != nil {
 			if !errors.Is(err, io.EOF) {
-				return nil, err
+				return nil, fmt.Errorf("failed to iterate over commit history: %w", err)
 			}
 
 			break
@@ -88,7 +93,7 @@ func (repo Repo) LogRef(name string, size uint8) ([]LogStatement, error) {
 	ref, err := repo.raw.Reference(plumbing.ReferenceName(name), false)
 
 	if err != nil {
-		return nil, err
+		return nil, ErrRefNotFound
 	}
 
 	return repo.Log(ref.Hash().String(), size)
@@ -105,7 +110,7 @@ func getTotalCommitStats(commit *object.Commit) (totalCommitStats, error) {
 	fileStats, err := commit.Stats()
 
 	if err != nil {
-		return totalStats, err
+		return totalStats, ErrFailedToCalculateStats
 	}
 
 	for _, fileStat := range fileStats {

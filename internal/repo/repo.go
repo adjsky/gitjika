@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,6 +10,12 @@ import (
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/config"
+)
+
+var (
+	ErrRepositoryNotFound           = errors.New("repository not found")
+	ErrFailedToReadRepositoryConfig = errors.New("failed to read repository config")
+	ErrFailedToReadRefs             = errors.New("failed to read references")
 )
 
 type Repo struct {
@@ -21,13 +28,13 @@ func New(path string) (Repo, error) {
 	repo, err := git.PlainOpen(path)
 
 	if err != nil {
-		return Repo{}, fmt.Errorf("failed to open repository: %w", err)
+		return Repo{}, ErrRepositoryNotFound
 	}
 
 	config, err := repo.Config()
 
 	if err != nil {
-		return Repo{}, fmt.Errorf("failed to read repository config: %w", err)
+		return Repo{}, ErrFailedToReadRepositoryConfig
 	}
 
 	return Repo{
