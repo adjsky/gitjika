@@ -1,18 +1,12 @@
 package repo
 
 import (
-	"errors"
 	"fmt"
 	"slices"
 	"strings"
 	"time"
 
 	"github.com/go-git/go-git/v5/plumbing"
-)
-
-var (
-	ErrAnnotatedTagNotFound = errors.New("annotated tag not found")
-	ErrCommitNotFound       = errors.New("commit not found")
 )
 
 type Branch struct {
@@ -40,7 +34,7 @@ func (repo Repo) Refs() (RefsResult, error) {
 	rIter, err := repo.raw.References()
 
 	if err != nil {
-		return result, ErrFailedToReadRefs
+		return result, fmt.Errorf("failed to get refs: %w", err)
 	}
 
 	err = rIter.ForEach(func(ref *plumbing.Reference) error {
@@ -49,7 +43,7 @@ func (repo Repo) Refs() (RefsResult, error) {
 			tagObject, err := repo.raw.TagObject(ref.Hash())
 
 			if err != nil {
-				return ErrAnnotatedTagNotFound
+				return err
 			}
 
 			result.Tags = append(result.Tags, Tag{
@@ -63,7 +57,7 @@ func (repo Repo) Refs() (RefsResult, error) {
 			commit, err := repo.raw.CommitObject(ref.Hash())
 
 			if err != nil {
-				return ErrCommitNotFound
+				return err
 			}
 
 			result.Branches = append(result.Branches, Branch{
@@ -77,6 +71,10 @@ func (repo Repo) Refs() (RefsResult, error) {
 		return nil
 	})
 
+	if err != nil {
+		return result, fmt.Errorf("failed to process refs: %w", err)
+	}
+
 	slices.SortFunc(result.Branches, func(a, b Branch) int {
 		return b.UpdatedAt.Compare(a.UpdatedAt)
 	})
@@ -85,5 +83,5 @@ func (repo Repo) Refs() (RefsResult, error) {
 		return b.CreatedAt.Compare(a.CreatedAt)
 	})
 
-	return result, err
+	return result, nil
 }

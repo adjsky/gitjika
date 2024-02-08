@@ -12,11 +12,6 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/object"
 )
 
-var (
-	ErrRefNotFound            = errors.New("reference not found")
-	ErrFailedToCalculateStats = errors.New("failed to compute stats")
-)
-
 type LogStatement struct {
 	CommitID     string
 	Message      string
@@ -31,7 +26,7 @@ func (repo Repo) Log(commitID string, size uint8) ([]LogStatement, error) {
 	rIter, err := repo.raw.References()
 
 	if err != nil {
-		return nil, ErrFailedToReadRefs
+		return nil, fmt.Errorf("failed to get refs: %w", err)
 	}
 
 	refm := make(map[plumbing.Hash][]string)
@@ -45,7 +40,7 @@ func (repo Repo) Log(commitID string, size uint8) ([]LogStatement, error) {
 	})
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to process refs: %w", err)
 	}
 
 	lgs := make([]LogStatement, 0, size)
@@ -93,7 +88,7 @@ func (repo Repo) LogRef(name string, size uint8) ([]LogStatement, error) {
 	ref, err := repo.raw.Reference(plumbing.ReferenceName(name), false)
 
 	if err != nil {
-		return nil, ErrRefNotFound
+		return nil, fmt.Errorf("failed to get ref: %w", err)
 	}
 
 	return repo.Log(ref.Hash().String(), size)
@@ -110,7 +105,7 @@ func getTotalCommitStats(commit *object.Commit) (totalCommitStats, error) {
 	fileStats, err := commit.Stats()
 
 	if err != nil {
-		return totalStats, ErrFailedToCalculateStats
+		return totalStats, fmt.Errorf("failed to calculate stats: %w", err)
 	}
 
 	for _, fileStat := range fileStats {

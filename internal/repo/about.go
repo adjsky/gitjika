@@ -15,13 +15,13 @@ func (repo Repo) About(refName string) (string, error) {
 	ref, err := repo.raw.Reference(plumbing.ReferenceName(refName), false)
 
 	if err != nil {
-		return "", ErrRefNotFound
+		return "", fmt.Errorf("failed to get ref: %w", err)
 	}
 
 	commit, err := repo.raw.CommitObject(ref.Hash())
 
 	if err != nil {
-		return "", ErrCommitNotFound
+		return "", fmt.Errorf("failed to get commit details: %w", err)
 	}
 
 	for _, candidate := range readmeCandidates {

@@ -47,10 +47,16 @@ func TestNew(t *testing.T) {
 
 			assert.NilError(t, err)
 
+			description, err := testRepo.Description()
+			assert.NilError(t, err)
+			assert.Equal(t, description, test.expected.description)
+
+			age, err := testRepo.Age()
+			assert.NilError(t, err)
+			assert.Equal(t, age, test.expected.age)
+
 			assert.Equal(t, testRepo.Name(), test.expected.name)
-			assert.Equal(t, testRepo.Description(), test.expected.description)
 			assert.Equal(t, testRepo.Author(), test.expected.author)
-			assert.Equal(t, testRepo.Age(), test.expected.age)
 		})
 	}
 }

@@ -15,7 +15,6 @@ import (
 var (
 	ErrRepositoryNotFound           = errors.New("repository not found")
 	ErrFailedToReadRepositoryConfig = errors.New("failed to read repository config")
-	ErrFailedToReadRefs             = errors.New("failed to read references")
 )
 
 type Repo struct {
@@ -48,28 +47,28 @@ func (repo Repo) Name() string {
 	return filepath.Base(repo.path)
 }
 
-func (repo Repo) Description() string {
+func (repo Repo) Description() (string, error) {
 	description, err := os.ReadFile(fmt.Sprintf("%s/description", repo.path))
 
 	if err != nil {
-		return ""
+		return "", err
 	}
 
-	return strings.TrimSpace(string(description))
+	return strings.TrimSpace(string(description)), nil
 }
 
 func (repo Repo) Author() string {
 	return repo.config.Raw.Section("gitjika").Option("author")
 }
 
-func (repo Repo) Age() time.Time {
+func (repo Repo) Age() (time.Time, error) {
 	agefile, err := os.ReadFile(fmt.Sprintf("%s/last-modified", repo.path))
 
 	if err != nil {
-		return time.Time{}
+		return time.Time{}, err
 	}
 
 	age, _ := time.Parse("2006-01-02 15:04:05 -0700", strings.TrimSpace(string(agefile)))
 
-	return age.UTC()
+	return age.UTC(), nil
 }
