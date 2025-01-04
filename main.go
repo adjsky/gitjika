@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/adjsky/gitjika/http/server"
+	"github.com/adjsky/gitjika/internal/http/server"
 )
 
 func main() {
