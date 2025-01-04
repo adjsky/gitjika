@@ -1,1 +1,6 @@
-.direnv
+.direnv/
+**/*_templ.go
+**/*_templ.txt
+.DS_Store
+static/styles.css
+tmp

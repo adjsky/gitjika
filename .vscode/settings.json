@@ -1,0 +1,15 @@
+{
+  "editor.formatOnSave": true,
+  "editor.quickSuggestions": {
+		"strings": "on"
+	},
+  "tailwindCSS.includeLanguages": {
+    "templ": "html"
+  },
+  "[templ]": {
+    "editor.defaultFormatter": "a-h.templ"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+}
