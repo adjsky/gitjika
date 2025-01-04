@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/adjsky/gitjika/repo"
+	"github.com/adjsky/gitjika/internal/repo"
 	"gotest.tools/v3/assert"
 )
 

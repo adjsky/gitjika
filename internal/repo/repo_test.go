@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/adjsky/gitjika/repo"
+	"github.com/adjsky/gitjika/internal/repo"
 	"gotest.tools/v3/assert"
 )
 
@@ -52,7 +52,6 @@ func TestNew(t *testing.T) {
 			assert.Equal(t, description, test.expected.description)
 
 			age, err := testRepo.Age()
-			assert.NilError(t, err)
 			assert.Equal(t, age, test.expected.age)
 
 			assert.Equal(t, testRepo.Name(), test.expected.name)
