@@ -10,7 +10,7 @@ import (
 )
 
 func TestLog(t *testing.T) {
-	basicBareRepo, err := repo.New(path.Join("fixtures", "repos", "basic_bare"))
+	basicBareRepo, err := repo.Open(path.Join("fixtures", "repos", "basic_bare"))
 
 	assert.NilError(t, err)
 
@@ -58,7 +58,7 @@ func TestLog(t *testing.T) {
 }
 
 func TestLogBranch(t *testing.T) {
-	basicBareRepo, err := repo.New(path.Join("fixtures", "repos", "basic_bare"))
+	basicBareRepo, err := repo.Open(path.Join("fixtures", "repos", "basic_bare"))
 
 	assert.NilError(t, err)
 

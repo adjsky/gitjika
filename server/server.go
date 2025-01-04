@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/adjsky/gitjika/internal/http/handlers"
+	"github.com/adjsky/gitjika/server/handlers"
 )
 
 type Server struct {

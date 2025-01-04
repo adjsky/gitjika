@@ -10,7 +10,7 @@ import (
 )
 
 func TestRefs(t *testing.T) {
-	refsBareRepo, err := repo.New(path.Join("fixtures", "repos", "refs_bare"))
+	refsBareRepo, err := repo.Open(path.Join("fixtures", "repos", "refs_bare"))
 
 	assert.NilError(t, err)
 

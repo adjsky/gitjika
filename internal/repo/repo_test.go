@@ -9,7 +9,7 @@ import (
 	"gotest.tools/v3/assert"
 )
 
-func TestNew(t *testing.T) {
+func TestOpen(t *testing.T) {
 	type expectedData struct {
 		name        string
 		description string
@@ -43,7 +43,7 @@ func TestNew(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.repo, func(t *testing.T) {
-			testRepo, err := repo.New(path.Join("fixtures", "repos", test.repo))
+			testRepo, err := repo.Open(path.Join("fixtures", "repos", test.repo))
 
 			assert.NilError(t, err)
 

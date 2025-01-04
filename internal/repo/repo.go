@@ -23,7 +23,7 @@ type Repo struct {
 	config *config.Config
 }
 
-func New(path string) (Repo, error) {
+func Open(path string) (Repo, error) {
 	repo, err := git.PlainOpen(path)
 
 	if err != nil {

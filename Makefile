@@ -8,7 +8,7 @@ test:
 
 .PHONY: dev/tailwind
 dev/tailwind:
-	tailwindcss -i app.pcss -o static/styles.css --watch
+	tailwindcss -i ui/styles.pcss -o static/styles.css --watch
 
 .PHONY: dev/templ
 dev/templ:
