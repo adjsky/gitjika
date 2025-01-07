@@ -1,12 +1,12 @@
 package main
 
 import (
-	"log"
-
+	"github.com/adjsky/gitjika/internal/config"
 	"github.com/adjsky/gitjika/server"
 )
 
 func main() {
-	server := server.New()
-	log.Fatal(server.Listen())
+	cfg := config.New()
+	server := server.New(cfg)
+	panic(server.Listen())
 }
