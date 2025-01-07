@@ -26,7 +26,7 @@ func New(cfg config.Config) Server {
 func (s Server) Listen() error {
 	addr := fmt.Sprintf("%s:%d", s.cfg.Server.Host, s.cfg.Server.Port)
 
-	slog.Info("Start listening", "addr", addr)
+	slog.Info("Start listening", slog.String("addr", addr))
 
 	return http.ListenAndServe(addr, s.mux)
 }

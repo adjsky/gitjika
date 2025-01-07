@@ -10,13 +10,17 @@ type Config struct {
 	Server ServerConfig
 }
 
-func New() Config {
+func New(filepath string) Config {
 	v := viper.New()
 
-	v.SetConfigName("config")
-	v.SetConfigType("toml")
-	v.AddConfigPath("/etc/gitjika")
-	v.AddConfigPath("$HOME/.gitjika")
+	if filepath != "" {
+		v.SetConfigFile(filepath)
+	} else {
+		v.SetConfigName("config")
+		v.SetConfigType("toml")
+		v.AddConfigPath("/etc/gitjika")
+		v.AddConfigPath("$HOME/.gitjika")
+	}
 
 	if err := v.ReadInConfig(); err != nil && !errors.As(err, &viper.ConfigFileNotFoundError{}) {
 		panic(err)

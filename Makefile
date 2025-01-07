@@ -12,8 +12,8 @@ dev/tailwind:
 
 .PHONY: dev/templ
 dev/templ:
-	templ generate --watch --proxy="http://localhost:6969" --cmd="go run ." --open-browser=false
+	templ generate --watch --proxy="http://localhost:6969" --cmd="go run . serve" --open-browser=false
 
-.PHONY: dev
-dev:
+.PHONY: dev/serve
+dev/serve:
 	make -j2 dev/tailwind dev/templ
